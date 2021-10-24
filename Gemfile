@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# Specify your gem's dependencies in mail_bag.gemspec.
+# Specify your gem's dependencies in fx_awesome_mails.gemspec.
 gemspec
 
 group :development do

@@ -1,4 +1,4 @@
-module MailBag
+module FXAwesomeMails
   module EmailHelpers
     def preheader(text)
       "<div style='display: none; max-height: 0px; overflow: hidden;'>

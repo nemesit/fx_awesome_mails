@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :mail_bag do
+# task :fx_awesome_mails do
 #   # Task goes here
 # end

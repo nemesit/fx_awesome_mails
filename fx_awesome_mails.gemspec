@@ -1,11 +1,11 @@
-require_relative "lib/mail_bag/version"
+require_relative "lib/fx_awesome_mails/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "mail_bag"
-  spec.version     = MailBag::VERSION
+  spec.name        = "fx_awesome_mails"
+  spec.version     = FXAwesomeMails::VERSION
   spec.authors     = ["Felix Gebhard"]
   spec.email       = ["fukurokujoe@googlemail.com"]
-  spec.homepage    = "https://github.com/nemesit/mail_bag"
+  spec.homepage    = "https://github.com/nemesit/fx_awesome_mails"
   spec.summary     = "Provides various view helpers for cross client mail creation"
   spec.description = "Provides various view helpers for cross client mail creation"
   spec.license     = ""
@@ -15,8 +15,8 @@ Gem::Specification.new do |spec|
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/nemesit/mail_bag"
-  spec.metadata["changelog_uri"] = "https://github.com/nemesit/mail_bag/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/nemesit/fx_awesome_mails"
+  spec.metadata["changelog_uri"] = "https://github.com/nemesit/fx_awesome_mails/blob/master/CHANGELOG.md"
 
   spec.files = Dir["{app,config,db,lib}/**/*", "Rakefile", "README.md"]
 

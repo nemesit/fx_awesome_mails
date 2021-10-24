@@ -1,4 +1,4 @@
-# MailBag
+# FXAwesomeMails
 Provides various view helpers for cross client mail creation.
 
 ## Usage
@@ -9,7 +9,7 @@ use the various view helpers in the .erb file of your mail
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'mail_bag'
+gem 'fx_awesome_mails'
 ```
 
 And then execute:
@@ -19,5 +19,5 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install mail_bag
+$ gem install fx_awesome_mails
 ```
