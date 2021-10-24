@@ -1,3 +1,4 @@
+require 'fx_awesome_mails/view_helpers'
 module FXAwesomeMails
   class Railtie < ::Rails::Railtie
     initializer "fx_awesome_mails.view_helpers" do
