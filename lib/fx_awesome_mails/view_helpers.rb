@@ -1,9 +1,8 @@
-require 'fx_awesome_mails/core_extensions'
+require 'fx_awesome_mails/refinements'
 module FXAwesomeMails
   module EmailHelpers
 
-    Hash.include FXAwesomeMails::CoreExtensions::Hash::Merging
-    String.include FXAwesomeMails::CoreExtensions::String::Merging
+    using FXAwesomeMails::Refinements
 
     def preheader(text)
       "<div style='display: none; max-height: 0px; overflow: hidden;'>
