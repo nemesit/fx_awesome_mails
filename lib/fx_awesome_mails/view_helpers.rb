@@ -183,7 +183,7 @@ module FXAwesomeMails
 
       def self.vertical_grid(_capture_helper, **options, &block)
         options = { valign: 'top', style: "text-align: left" }.merge_email_options(options)
-        _capture_helper.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "text-container #{options[:class]}") do
+        _capture_helper.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "vertical-grid #{options[:class]}") do
           "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               #{_capture_helper.capture(VerticalGrid.new(_capture_helper), &block)}
@@ -243,11 +243,8 @@ module FXAwesomeMails
         "#{Gutter.new(parent).vertical(...)}".html_safe
       end
 
-      def text(text = nil, **options, &block)
-        options = { valign: 'top', style: "mso-line-height-rule: exactly; text-align: left; font-family: Arial, sans-serif; font-size: 15px; line-height: 18px; font-weight: normal; color: #999999" }.merge_email_options(options)
-        content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "text-container #{options[:class]}") do
-          block_given? ? capture(&block) : text 
-        end
+      def text(...)
+        "#{Text.new(parent).text(...)}".html_safe
       end
 
       def image(...)
