@@ -163,7 +163,7 @@ module FXAwesomeMails
 
       def email_image_tag(source: nil, **options, &block)
         options = {alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: #FFFFFF;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }.merge_email_options(options)
-        html = "<th valign='#{options[:avlign]}' style='text-align:left' class='#{options[:class]} mobile-display-table-footer-group image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
+        html = "<th valign='#{options[:valign]}' style='text-align:left' class='#{options[:class]} mobile-display-table-footer-group image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
         html << link_to_if_true(options[:link_url].present?, options[:link_url], target: '_blank') do
           image_tag(source, style: options[:style], width: "#{options[:width]}", height: "#{options[:height]}", alt: "#{options[:alt]}")
         end
@@ -228,7 +228,8 @@ module FXAwesomeMails
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
       def self.horizontal_grid(_capture_helper, **options, &block)
-        "<th valign='top' style='text-align:left' class='horizontal-grid'>
+        options = { valign: 'top', style: "text-align: left" }.merge_email_options(options)
+        "<th valign='#{options[:valign]}' style='#{options[:style]}' class='#{options[:class]} horizontal-grid'>
           <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               <tr>
