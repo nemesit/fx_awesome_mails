@@ -148,7 +148,7 @@ module FXAwesomeMails
 
       def text(text = nil, **options, &block)
         options = {valign: "top", style: "mso-line-height-rule:exactly;text-align:left;font-weight:400"}.merge_email_options(options)      
-        content_tag('th', valign: "#{options[:valign]}", style: options[:style], class: "#{options[:class]} text-container", bgcolor: "#{options[:style].to_s.to_css_hash["background-color"]}") do
+        content_tag('th', valign: "#{options[:valign]}", style: options[:style], class: "#{options[:class]} text-container", bgcolor: options[:style].to_s.to_css_hash["background-color"].presence.try(&:to_s)) do
           "#{block_given? ? capture(&block) : text}".html_safe
         end
       end
