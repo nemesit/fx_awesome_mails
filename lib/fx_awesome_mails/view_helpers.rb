@@ -129,13 +129,13 @@ module FXAwesomeMails
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
       def horizontal(height = '20', **options)
-        options = {valign: 'top', class: '',style: ""}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-gutter", bgcolor: "#{options[:style].to_s.to_css_hash["background-color"]}")
+        options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
+        content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
       end
 
       def vertical(width = '20', **options)
-        options = {valign: 'top', class: '',style: ""}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-gutter", bgcolor: "#{options[:style].to_s.to_css_hash["background-color"]}")
+        options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
+        content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
       end
     end
 
@@ -147,7 +147,7 @@ module FXAwesomeMails
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
       def text(text = nil, **options, &block)
-        options = {style: "mso-line-height-rule:exactly;text-align:left;font-weight:400"}.merge_email_options(options)      
+        options = {valign: "top", style: "mso-line-height-rule:exactly;text-align:left;font-weight:400"}.merge_email_options(options)      
         content_tag('th', valign: "#{options[:valign]}", style: options[:style], class: "#{options[:class]} text-container", bgcolor: "#{options[:style].to_s.to_css_hash["background-color"]}") do
           "#{block_given? ? capture(&block) : text}".html_safe
         end
@@ -163,7 +163,7 @@ module FXAwesomeMails
 
       def email_image_tag(source: nil, **options, &block)
         options = {alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: #FFFFFF;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }.merge_email_options(options)
-        html = "<th valign='#{options[:valign]}' style='text-align:left' class='#{options[:class]} mobile-display-table-footer-group image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
+        html = "<th valign='#{options[:valign]}' style='text-align:#{options[:align]}' class='#{options[:class]} image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
         html << link_to_if_true(options[:link_url].present?, options[:link_url], target: '_blank') do
           image_tag(source, style: options[:style], width: "#{options[:width]}", height: "#{options[:height]}", alt: "#{options[:alt]}")
         end
