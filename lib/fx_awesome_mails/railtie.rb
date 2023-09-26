@@ -6,10 +6,3 @@ module FXAwesomeMails
     end
   end
 end
-
-# module FXAwesomeMails
-#   module Rails
-#     class Engine < ::Rails::Engine
-#     end
-#   end
-# end

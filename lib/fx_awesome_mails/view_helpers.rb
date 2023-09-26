@@ -119,10 +119,11 @@ module FXAwesomeMails
           graphical_button(text, **options)
         end
       end
-
     end
-    class Gutter
+
+    class Spacer
       attr_accessor :parent
+
       def initialize(parent)
         self.parent = parent
       end
@@ -130,14 +131,16 @@ module FXAwesomeMails
 
       def horizontal(height = '20', **options)
         options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+        content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
       end
 
       def vertical(width = '20', **options)
         options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+        content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
       end
     end
+
+    Gutter = Spacer
 
     class Text
       attr_accessor :parent
@@ -162,7 +165,7 @@ module FXAwesomeMails
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
       def email_image_tag(source: nil, **options, &block)
-        options = {alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: #FFFFFF;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }.merge_email_options(options)
+        options = {alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: transparent;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }.merge_email_options(options)
         html = "<th valign='#{options[:valign]}' style='text-align:#{options[:align]}' class='#{options[:class]} image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
         html << link_to_if_true(options[:link_url].present?, options[:link_url], target: '_blank') do
           image_tag(source, style: options[:style], width: "#{options[:width]}", height: "#{options[:height]}", alt: "#{options[:alt]}")
@@ -173,27 +176,26 @@ module FXAwesomeMails
       end
     end
 
-
-    class VerticalGrid
+    class VStack
       attr_accessor :parent
       def initialize(parent)
         self.parent = parent
       end
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
-      def self.vertical_grid(_capture_helper, **options, &block)
+      def self.vstack(_capture_helper, **options, &block)
         options = { valign: 'top', style: "text-align: left" }.merge_email_options(options)
-        _capture_helper.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "vertical-grid #{options[:class]}") do
+        _capture_helper.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "vertical-stack vertical-grid #{options[:class]}") do
           "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
-              #{_capture_helper.capture(VerticalGrid.new(_capture_helper), &block)}
+              #{_capture_helper.capture(VStack.new(_capture_helper), &block)}
             </tbody>
           </table>".html_safe
         end
       end
 
-      def gutter(...)
-        "<tr>#{Gutter.new(parent).horizontal(...)}</tr>".html_safe
+      def spacer(...)
+        "<tr>#{Spacer.new(parent).horizontal(...)}</tr>".html_safe
       end
 
       def text(text = nil, **options, &block)
@@ -210,38 +212,47 @@ module FXAwesomeMails
         </tr>".html_safe
       end
 
-      def horizontal_grid(**options, &block)
-        "<tr>#{HorizontalGrid.horizontal_grid(parent, **options, &block)}</tr>".html_safe
+      def hstack(**options, &block)
+        "<tr>#{HStack.hstack(parent, **options, &block)}</tr>".html_safe
       end
 
-      def vertical_grid(**options, &block)
-        "<tr>#{VerticalGrid.vertical_grid(parent, **options, &block)}</tr>".html_safe
+      def vstack(**options, &block)
+        "<tr>#{VStack.vstack(parent, **options, &block)}</tr>".html_safe
+      end
+
+      alias_method :horizontal_grid, :hstack
+      alias_method :vertical_grid, :vstack
+      alias_method :gutter, :spacer
+      
+      class <<self  
+        alias_method :vertical_grid, :vstack
       end
     end
 
+    VerticalGrid = VStack
 
-    class HorizontalGrid
+    class HStack
       attr_accessor :parent
       def initialize(parent)
         self.parent = parent
       end
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
-      def self.horizontal_grid(_capture_helper, **options, &block)
+      def self.hstack(_capture_helper, **options, &block)
         options = { valign: 'top', style: "text-align: left" }.merge_email_options(options)
-        "<th valign='#{options[:valign]}' style='#{options[:style]}' class='#{options[:class]} horizontal-grid'>
+        "<th valign='#{options[:valign]}' style='#{options[:style]}' class='#{options[:class]} horizontal-stack horizontal-grid'>
           <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               <tr>
-                #{_capture_helper.capture(HorizontalGrid.new(_capture_helper), &block)}
+                #{_capture_helper.capture(HStack.new(_capture_helper), &block)}
               </tr>
             </tbody>
           </table>
         </th>".html_safe
       end
 
-      def gutter(...)
-        "#{Gutter.new(parent).vertical(...)}".html_safe
+      def spacer(...)
+        "#{Spacer.new(parent).vertical(...)}".html_safe
       end
 
       def text(...)
@@ -272,25 +283,33 @@ module FXAwesomeMails
         </th>".hmtl_safe
       end
 
-      def horizontal_grid(**options, &block)
-        "#{HorizontalGrid.horizontal_grid(parent, **options, &block)}".html_safe
+      def hstack(**options, &block)
+        "#{HStack.hstack(parent, **options, &block)}".html_safe
       end
 
-      def vertical_grid(**options, &block)
-        "#{VerticalGrid.vertical_grid(parent, **options, &block)}".html_safe
+      def vstack(**options, &block)
+        "#{VStack.vstack(parent, **options, &block)}".html_safe
       end
 
+      alias_method :horizontal_grid, :hstack
+      alias_method :vertical_grid, :vstack
+      alias_method :gutter, :spacer
+      
+      class <<self  
+        alias_method :horizontal_grid, :hstack
+      end
     end
 
-    class ContentTable
-
+    HorizontalGrid = HStack
+    
+    class EmailContent
       attr_accessor :parent
       def initialize(parent)
         self.parent = parent
       end
       delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
-      def self.content_table(_capture_helper, **options, &block)
+      def self.email_content(_capture_helper, **options, &block)
         options = {alt: '', link_url: nil, width: 600, height: 50, valign: 'top', align: 'left', class: '', background: '', style: "background-color: #FFFFFF" }.merge_email_options(options)
         "<table cellpadding='0' cellspacing='0' border='0' width='#{options[:width]}' style='margin: 0; padding: 0; text-align: left; width: 100%; min-width: 600px; line-height: 100%;' role='presentation' background='#{options[:background]}' class='background-table has-width-#{options[:width]}' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' valign='top'>
           <tbody>
@@ -367,37 +386,37 @@ module FXAwesomeMails
         </div>".html_safe
       end
 
-      def gutter(...)
+      def spacer(...)
         # only horizontal
         "<div>
           <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               <tr>
-                #{Gutter.new(parent).horizontal(...)}
+                #{Spacer.new(parent).horizontal(...)}
               </tr>
             </tbody>
           </table>
         </div>".html_safe
       end
 
-      def horizontal_grid(**options, &block)
+      def hstack(**options, &block)
         "<div>
           <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               <tr>
-                #{HorizontalGrid.horizontal_grid(parent, **options, &block)}
+                #{HStack.hstack(parent, **options, &block)}
               </tr>
             </tbody>
           </table>
         </div>".html_safe
       end
 
-      def vertical_grid(**options, &block)
+      def vstack(**options, &block)
         "<div>
           <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
             <tbody>
               <tr>
-                #{VerticalGrid.vertical_grid(parent, **options, &block)}
+                #{VStack.vstack(parent, **options, &block)}
               </tr>
             </tbody>
           </table>
@@ -415,11 +434,21 @@ module FXAwesomeMails
       #     </table>
       #   </div>".html_safe
       # end
-
+      alias_method :horizontal_grid, :hstack
+      alias_method :vertical_grid, :vstack
+      alias_method :gutter, :spacer
+      
+      class <<self  
+        alias_method :content_table, :email_content
+      end
     end
-    
-    def content_table(**options, &block)
+
+    ContentTable = EmailContent
+
+    def email_content(**options, &block)
       ContentTable.content_table(self, **options, &block)
     end
+
+    alias_method :content_table, :email_content
   end
 end
