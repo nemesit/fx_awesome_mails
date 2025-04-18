@@ -4,26 +4,26 @@ module FXAwesomeMails
 
     using FXAwesomeMails::Refinements
 
-    def preheader(text)
-      "<div style='display: none; max-height: 0px; overflow: hidden;'>
-        #{text}
-      </div>
-      <div class='preheader' style='display: none; width: 0px; height: 0px; max-height: 0px; overflow: hidden;'>
-        &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
-      </div>".html_safe
-    end
+    # def preheader(text)
+    #   "<div style='display: none; max-height: 0px; overflow: hidden;'>
+    #     #{text}
+    #   </div>
+    #   <div class='preheader' style='display: none; width: 0px; height: 0px; max-height: 0px; overflow: hidden;'>
+    #     &#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;&#847;&zwnj;&nbsp;
+    #   </div>".html_safe
+    # end
 
-    def titlebar_link(link)
-      "<div class='tac pt10 pb10 pl5 pr5'>
-        <!--[if gte mso 12]><br><![endif]-->
-          #{link}
-        <!--[if gte mso 12]><br><![endif]-->
-      </div>".html_safe
-    end
+    # def titlebar_link(link)
+    #   "<div class='tac pt10 pb10 pl5 pr5'>
+    #     <!--[if gte mso 12]><br><![endif]-->
+    #       #{link}
+    #     <!--[if gte mso 12]><br><![endif]-->
+    #   </div>".html_safe
+    # end
 
-    def divider(options = {})
-      "<p class='MsoNormal'><o:p>&nbsp;</o:p></p>".html_safe # TODO: options/smaller
-    end
+    # def divider(options = {})
+    #   "<p class='MsoNormal'><o:p>&nbsp;</o:p></p>".html_safe # TODO: options/smaller
+    # end
 
     # experimental mail helpers
     def content_tag_if(condition, name, content_or_options_with_block = {}, options = {}, escape = true, &block)
@@ -39,12 +39,12 @@ module FXAwesomeMails
       content_tag(name, content_or_options_with_block, options, escape, &block)   
     end
 
-    def rounded_box(&block)
-      html = "<div class='rounded_box'><div class='rounded_box_content'><div class='rounded_box_top'></div>"        
-      html << capture(:foo, :bar, &block)
-      html << "<div class='rounded_box_bottom'><div></div></div></div>"
-      raw html
-    end
+    # def rounded_box(&block)
+    #   html = "<div class='rounded_box'><div class='rounded_box_content'><div class='rounded_box_top'></div>"        
+    #   html << capture(:foo, :bar, &block)
+    #   html << "<div class='rounded_box_bottom'><div></div></div></div>"
+    #   raw html
+    # end
 
     # https://edgeapi.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to_if + link_to( ...&block)
     def link_to_if_true(condition, name, options = {}, html_options = {}, &block)
@@ -59,86 +59,86 @@ module FXAwesomeMails
       end
     end
 
-    class Button
-      attr_accessor :parent
-      def initialize(parent)
-        self.parent = parent
-      end
-      delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
+    # class Button
+    #   attr_accessor :parent
+    #   def initialize(parent)
+    #     self.parent = parent
+    #   end
+    #   delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
-      # simple, graphical
-      def simple_button(text = nil, type: :simple, **options, &block)
-        html = "<th valign='bottom' style='text-align:left' class='buttoncellclass mobile-display-block button-container' bgcolor='#000000'>
-          <table cellpadding='0' cellspacing='0' border='0' width='100%' style='width:100% !important' role='presentation'>
-            <tbody>
-              <tr>
-                <th valign='top'>
-                  <table cellpadding='0' cellspacing='0' border='0' width='auto' style='margin:0 auto' role='presentation' align='center'>
-                    <tbody>
-                      <tr>"
+    #   # simple, graphical
+    #   def simple_button(text = nil, type: :simple, **options, &block)
+    #     html = "<th valign='bottom' style='text-align:left' class='buttoncellclass mobile-display-block button-container' bgcolor='#000000'>
+    #       <table cellpadding='0' cellspacing='0' border='0' width='100%' style='width:100% !important' role='presentation'>
+    #         <tbody>
+    #           <tr>
+    #             <th valign='top'>
+    #               <table cellpadding='0' cellspacing='0' border='0' width='auto' style='margin:0 auto' role='presentation' align='center'>
+    #                 <tbody>
+    #                   <tr>"
 
-                        # style = mso-line-height-rule: exactly; -webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;background:#FFFF00;text-align:right
-                        # link_style = -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; padding: 10px 20px; display: inline-block; text-decoration: none; text-align: right; color: #00FF00; border: 12; font-family: Arial, sans-serif; font-size: 13px; line-height: 14px; font-weight: 500;
-        html << content_tag('th', valign: options[:valign].to_s, align: options[:align].to_s) do
-          link_to_if_true(options[:link_to_url].present?, options[:link_to_url].presence, target: '_blank') do
-            "#{block_given? ? capture(&block) : text}".html_safe
-          end
-        end
+    #                     # style = mso-line-height-rule: exactly; -webkit-border-radius:10px;-moz-border-radius:10px;border-radius:10px;background:#FFFF00;text-align:right
+    #                     # link_style = -webkit-border-radius: 10px; -moz-border-radius: 10px; border-radius: 10px; padding: 10px 20px; display: inline-block; text-decoration: none; text-align: right; color: #00FF00; border: 12; font-family: Arial, sans-serif; font-size: 13px; line-height: 14px; font-weight: 500;
+    #     html << content_tag('th', valign: options[:valign].to_s, align: options[:align].to_s) do
+    #       link_to_if_true(options[:link_to_url].present?, options[:link_to_url].presence, target: '_blank') do
+    #         "#{block_given? ? capture(&block) : text}".html_safe
+    #       end
+    #     end
 
-        html <<       "</tr>
-                    </tbody>
-                  </table>
-                </th>
-              </tr>
-            </tbody>
-          </table>
-        </th>"
+    #     html <<       "</tr>
+    #                 </tbody>
+    #               </table>
+    #             </th>
+    #           </tr>
+    #         </tbody>
+    #       </table>
+    #     </th>"
 
-        html.html_safe
-      end
+    #     html.html_safe
+    #   end
 
-      def graphical_button(text, type: :simple, **options, &block)
-        "<th valign='bottom' style='text-align:left' class='buttoncellclass mobile-display-block button-container' bgcolor='#000000'>
-          <table cellpadding='0' cellspacing='0' border='0' width='100%' style='width:100% !important' role='presentation'>
-            <tbody>
-              <tr>
+    #   def graphical_button(text, type: :simple, **options, &block)
+    #     "<th valign='bottom' style='text-align:left' class='buttoncellclass mobile-display-block button-container' bgcolor='#000000'>
+    #       <table cellpadding='0' cellspacing='0' border='0' width='100%' style='width:100% !important' role='presentation'>
+    #         <tbody>
+    #           <tr>
 
                 
 
-              </tr>
-            </tbody>
-          </table>
-        </th>"
-      end
+    #           </tr>
+    #         </tbody>
+    #       </table>
+    #     </th>"
+    #   end
 
-      def button(text = nil, type: :simple, **options)
-        case type
-        when :simple
-          simple_button(text, **options)
-        when :graphical
-          graphical_button(text, **options)
-        end
-      end
-    end
+    #   def button(text = nil, type: :simple, **options)
+    #     case type
+    #     when :simple
+    #       simple_button(text, **options)
+    #     when :graphical
+    #       graphical_button(text, **options)
+    #     end
+    #   end
+    # end
 
-    class Spacer
-      attr_accessor :parent
+    # class Spacer
+    #   attr_accessor :parent
 
-      def initialize(parent)
-        self.parent = parent
-      end
-      delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
+    #   def initialize(parent)
+    #     self.parent = parent
+    #   end
+    #   delegate :capture, :content_tag, :link_to, :link_to_if, :link_to_if_true, :image_tag, :to => :parent
 
-      def horizontal(height = '20', **options)
-        options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
-      end
+    #   def horizontal(height = '20', **options)
+    #     options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
+    #     content_tag('th', '&nbsp;'.html_safe, height: height, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+    #   end
 
-      def vertical(width = '20', **options)
-        options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
-        content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
-      end
-    end
+    #   def vertical(width = '20', **options)
+    #     options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(options)
+    #     content_tag('th', '&nbsp;'.html_safe, width: width, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+    #   end
+    # end
 
     Gutter = Spacer
 
