@@ -131,14 +131,18 @@ module FXAwesomeMails
           class: (in_hstack ? 'hstack_spacer' : 'vstack_spacer'),
           style: 'font-size:0;line-height:0;mso-line-height-rule:exactly'
         }
-        opts[in_hstack ? :width : :height] = @attrs[:size]
+        # opts[in_hstack ? :width : :height] = @attrs[:size]
+
+        size = @attrs.fetch(:size, 16)
         
         options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(@attrs)
         
-        if in_hstack
-          @view.content_tag('th', '&nbsp;'.html_safe, height: @attrs[:size], valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+        if DSL::Current.parent.is_a?(VStack)
+          @view.content_tag("tr") do
+            @view.content_tag('th', '&nbsp;'.html_safe, height: size, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+          end
         else
-          @view.content_tag('th', '&nbsp;'.html_safe, width: @attrs[:size], valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+          @view.content_tag('th', '&nbsp;'.html_safe, width: size, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
         end
       end
     end
