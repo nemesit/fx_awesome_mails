@@ -86,6 +86,9 @@ module FXAwesomeMails
       include ActionView::Context
       delegate_missing_to :@view
       
+      class_attribute :default_email_options, instance_predicate: false, default: {}
+      class_attribute :non_overridable_email_options, instance_predicate: false, default: {}
+
       def initialize(**attrs, &block)
         view_ctx = attrs.delete(:view)    
         view_ctx ||= DSL::Current.view
@@ -105,8 +108,12 @@ module FXAwesomeMails
         @attrs = attrs.compact
         @block = block
       end
-      
-      def tag_name = :div  # subclasses override when needed
+
+      def email_options
+        merged = default_email_options.merge_email_options(@attrs)
+        merged = merged.merge(non_overridable_email_options)
+        normalize_email_options(merged)
+      end
       
       protected
       def capture_body
@@ -116,6 +123,14 @@ module FXAwesomeMails
       ensure
         DSL::Current.parent = prev
       end
+
+      private
+      def normalize_email_options(options)
+        new_options = options.deep_dup
+        new_options[:style]&.to_css_hash&.dig("background-color").try { new_options[:bgcolor] ||= _1 }
+        new_options
+      end
+
     end
     
 
@@ -123,94 +138,86 @@ module FXAwesomeMails
       def initialize(size = 16, **a)
         super(size: size, **a)
       end
-      def tag_name = :td       # irrelevant; we override to_s
       
-      def to_s
-        in_hstack = DSL::Current.parent.is_a?(HStack)
-        opts = {
-          class: (in_hstack ? 'hstack_spacer' : 'vstack_spacer'),
-          style: 'font-size:0;line-height:0;mso-line-height-rule:exactly'
-        }
-        # opts[in_hstack ? :width : :height] = @attrs[:size]
+      self.default_email_options = { valign: "top", style: "font-size:0;line-height:0;mso-line-height-rule:exactly" }
 
-        size = @attrs.fetch(:size, 16)
-        
-        options = {valign: 'top', class: '',style: "text-align:left;font-size:1px;line-height:1px"}.merge_email_options(@attrs)
-        
-        if DSL::Current.parent.is_a?(VStack)
+      def to_s
+        inside_vstack = DSL::Current.parent.is_a?(VStack)
+        options = email_options
+        options[inside_vstack ? :height : :width] ||= options.delete(:size) || 16
+        options = options.merge_email_options({ class: inside_vstack ? "vstack_spacer" : "hstack_spacer" })
+      
+        if inside_vstack
           @view.content_tag("tr") do
-            @view.content_tag('th', '&nbsp;'.html_safe, height: size, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} horizontal-spacer horizontal-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+            @view.content_tag('th', '&nbsp;'.html_safe, options)
           end
         else
-          @view.content_tag('th', '&nbsp;'.html_safe, width: size, valign: "#{options[:valign]}", style: "#{options[:style]}", class: "#{options[:class]} vertical-spacer vertical-gutter", bgcolor: options[:style].to_s.to_css_hash["background-color"].try(&:to_s))
+          @view.content_tag('th', '&nbsp;'.html_safe, options)
         end
       end
     end
 
     
-    class HStack < Element
-      def tag_name = :div
-      
+    class HStack < Element      
+      self.default_email_options = { valign: 'top', style: "text-align: left", class: "hstack" }
+
       def initialize(**a)
         super(**a)
       end
 
       def to_s
-        options = { valign: 'top', style: "text-align: left" }.merge_email_options(@attrs)
-
         if DSL::Current.parent.is_a?(VStack)
-          "<tr><th valign='#{options[:valign]}' style='#{options[:style]}' class='#{options[:class]} horizontal-stack horizontal-grid'>
-            <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
-              <tbody>
-                <tr>
-                  #{capture_body}
-                </tr>
-              </tbody>
-            </table>
-          </th></tr>".html_safe
+
+          tag.tr do
+            tag.th(email_options) do
+              tag.table(cellpadding: "0", border: "0", width: "100%", style: "min-width:100%", role: "presentation") do
+                tag.tbody do
+                  tag.tr(capture_body)
+                end
+              end
+            end
+          end
 
         else
-          "<th valign='#{options[:valign]}' style='#{options[:style]}' class='#{options[:class]} horizontal-stack horizontal-grid'>
-            <table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
-              <tbody>
-                <tr>
-                  #{capture_body}
-                </tr>
-              </tbody>
-            </table>
-          </th>".html_safe
+
+          tag.th(email_options) do
+            tag.table(cellpadding: "0", cellspacing: "0", border: "0", width: "100%", style: "min-width:100%", role: "presentation") do
+              tag.tbody do
+                tag.tr(capture_body)
+              end
+            end
+          end
+
         end
       end
     end
     
     class VStack < Element # Apply same logging to HStack
-      
+      self.default_email_options = { valign: 'top', style: "text-align: left", class: "vstack" }
+
       def initialize(**a)
         super(**a)
       end
 
       def to_s
-        options = { valign: 'top', style: "text-align: left" }.merge_email_options(@attrs)
-
         if DSL::Current.parent.is_a?(VStack)
-          @view.content_tag("tr") do
-            @view.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "vertical-stack vertical-grid #{options[:class]}") do
-              "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
-                <tbody>
-                  #{capture_body}
-                </tbody>
-              </table>".html_safe
+
+          tag.tr do
+            tag.th(email_options) do
+              tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: '100%', style: 'min-width:100%', role: 'presentation') do
+                tag.tbody(capture_body)
+              end
             end
           end
 
         else
-          @view.content_tag('th', valign: "#{options[:valign]}", style: "#{options[:style]}", class: "vertical-stack vertical-grid #{options[:class]}") do
-            "<table cellpadding='0' cellspacing='0' border='0' width='100%' style='min-width:100%' role='presentation'>
-              <tbody>
-                #{capture_body}
-              </tbody>
-            </table>".html_safe
+
+          tag.th(email_options) do
+            tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: '100%', style: 'min-width:100%', role: 'presentation') do
+              tag.tbody(capture_body)
+            end
           end
+
         end
       end
     end
@@ -219,18 +226,17 @@ module FXAwesomeMails
       HIDDEN_STYLE = 'display:none;max-height:0;overflow:hidden'.freeze
       
       def initialize(text = nil, **attrs, &block)
-        @text, @block = text, block
         super(**attrs)
+        @text, @block = text, block
       end
-      
-      def tag_name = :div
-      
+            
       def to_s
         content = @block ? capture_body : @text
-        filler   = '&#847;&zwnj;&nbsp;' * 90
-        hidden_1 = @view.content_tag(:div, content, style: HIDDEN_STYLE)
-        hidden_2 = @view.content_tag(:div, filler, class: 'preheader', style: "#{HIDDEN_STYLE};width:0;height:0")
-        (hidden_1 + hidden_2).html_safe
+        content_div = tag.div(style: HIDDEN_STYLE) { content }
+        filler = tag.div(class: "preheader", style: "#{HIDDEN_STYLE};width:0;height:0") { '&#847;&zwnj;&nbsp;' * 90 }
+
+        safe_join([content_div, filler])
+        # (content_div + filler).html_safe
       end
     end
 
@@ -239,26 +245,26 @@ module FXAwesomeMails
         super(**attrs)
         @link_html, @block = link_html, block
       end
-      
-      def tag_name = :div
-      
+            
       def to_s
         content = @block ? capture_body : @link_html
-        @view.content_tag(:div,
-          "<!--[if gte mso 12]><br><![endif]-->#{content}<!--[if gte mso 12]><br><![endif]-->".html_safe,
-          class: 'tac pt10 pb10 pl5 pr5').html_safe
+        tag.div class: "titlebar_link tac pt10 pb10 pl5 pr5" do # TODO: adjust styling differently
+          "<!--[if gte mso 12]><br><![endif]-->#{content}<!--[if gte mso 12]><br><![endif]-->".html_safe
+        end
       end
     end
     
     class Divider < Element
-      def tag_name = :p
+      self.default_email_options = { class: "divider MsoNormal" }
+
       def to_s
-        @view.content_tag(:p, '<o:p>&nbsp;</o:p>'.html_safe, class: 'MsoNormal').html_safe
+        content = tag.p('<o:p>&nbsp;</o:p>'.html_safe, **email_options)
+        DSL::Current.parent.is_a?(VStack) ? tag.tr { content } : content
       end
     end
 
     class Image < Element
-
+      self.default_email_options = { alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: transparent;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }
       def link_to_if_true(condition, name, options = {}, html_options = {}, &block)
         if condition
           link_to(name, options, html_options, &block)
@@ -277,16 +283,16 @@ module FXAwesomeMails
       end
 
       def to_s
-        options = { alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: transparent;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }.merge_email_options(options)
-        html = ""
-        html << "<tr>" if DSL::Current.parent.is_a?(VStack)
-        html << "<th valign='#{options[:valign]}' style='text-align:#{options[:align]}' class='#{options[:class]} image-container' bgcolor='#{options[:style].to_s.to_css_hash["background-color"]}' align='#{options[:align]}'>"
-        html << link_to_if_true(options[:link_url].present?, options[:link_url], target: '_blank') do
-          image_tag(@source, style: options[:style], width: "#{options[:width]}", height: "#{options[:height]}", alt: "#{options[:alt]}")
+        options = email_options
+        link_url = options.delete(:link_url)
+
+        content = tag.th do
+          link_to_if_true(link_url.present?, link_url, target: '_blank') do
+            image_tag(@source, options)
+          end
         end
-        html << "</th>"
-        html << "</tr>" if DSL::Current.parent.is_a?(VStack)
-        html.html_safe
+
+        DSL::Current.parent.is_a?(VStack) ? tag.tr { content } : content
       end
 
     end
@@ -297,35 +303,71 @@ module FXAwesomeMails
         @text, @block = text, block
       end
       
-      def tag_name = :td
       def to_s
         content = @block ? capture_body : @text
         default = { valign: 'top', style:  'mso-line-height-rule:exactly;text-align:left;font-weight:400' }
         if DSL::Current.parent.is_a?(VStack)
-          @view.content_tag(:tr) do
-            @view.content_tag(:td, content, **default.merge_email_options(@attrs)).html_safe
+          tag.tr do
+            tag.td(content, **email_options)
           end
         else
-          @view.content_tag(:td, content, **default.merge_email_options(@attrs)).html_safe
+          tag.td(content, **email_options)
         end
       end
     end
 
-    class EmailContent < Element
-      def tag_name = :table
+    class ZStack < Element
       def to_s
-        w  = (@attrs[:width] || 600).to_i
-        bg = (@attrs[:style] || '').to_css_hash['background-color'] || '#FFFFFF'
-        inner = @view.content_tag(:table,
-                  @view.content_tag(:tr,
-                    @view.content_tag(:th, capture_body, valign: 'top')),
-                  cellpadding: 0, cellspacing: 0, border: 0,
-                  width: w, style: "width:#{w}px;margin:0 auto", role: 'presentation')
-        @view.content_tag(:table,
-          @view.content_tag(:tr, @view.content_tag(:th, inner)),
-          cellpadding: 0, cellspacing: 0, border: 0,
-          width: w, bgcolor: bg,
-          style: "margin:0;padding:0;text-align:left;width:100%;min-width:#{w}px;line-height:100%").html_safe
+      container_style = "position: relative; width: 100%; height: 100%"
+    
+        # Wrap the content (yielded via capture_body) in a table with one cell that is
+        # relatively positioned so that its children (each rendered as an absolute element)
+        tag.table(style: container_style, cellpadding: "0", cellspacing: "0", border: "0", width: "100%") do
+          tag.tbody do
+            tag.tr do
+              tag.td(style: "position: relative") do
+                capture_body
+              end
+            end
+          end
+        end
+      end
+    end
+      
+    class ZStackItem < Element
+      def to_s
+        # Each ZStackItem will be layered in the same container using absolute positioning.
+        # You might further customize properties (e.g. setting a z-index) via attrs if needed.
+        absolute_style = "position: absolute; top: 0; left: 0; width: 100%"
+    
+        tag.div(capture_body, style: absolute_style)
+      end
+    end
+    
+
+    class EmailContent < Element
+      self.default_email_options = { width: 600, style: "background-color: #FFFFFF" }
+      self.default_email_options = {  valign: 'top', cellpadding: '0', cellspacing: '0', border: '0', width: 600, style: 'margin: 0; padding: 0; text-align: left; width: 100%; min-width: 600px; line-height: 100%;', role: 'presentation', background: '#FFFFFF', class: 'background-table has-width-600', bgcolor: '#FFFFFF'}
+            
+      def to_s
+        tag.table(email_options) do
+          tag.tbody do
+            tag.tr do
+              tag.th(valign: "top") do
+                tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: email_options[:width], style: "width:#{email_options[:width]}px; margin:0 auto", role: 'presentation', class: "#{email_options[:class]} email-content", align: 'center') do
+                  tag.tbody do
+                    tag.tr do
+                      tag.th(valign: "top") do
+                        tag.div(capture_body)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
       end
     end
 
