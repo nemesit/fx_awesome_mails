@@ -4,8 +4,69 @@ require "active_support"
 module FXAwesomeMails
 
   module DSL
+
     class Current < ActiveSupport::CurrentAttributes
       attribute :view, :parent
+    end
+
+    module TagExtensions
+      
+      def vstack(...)
+        VStack.new(...)
+      end
+
+      def hstack(...)
+        HStack.new(...)
+      end
+      
+      def zstack(...)
+        ZStack.new(...)
+      end
+      
+      def spacer(size = 16, **options)
+        Spacer.new(size, **options)
+      end
+  
+      def preheader(text = nil, **attrs)
+        Preheader.new(text, **attrs)
+      end
+  
+      def titlebar_link(link_html = nil, **attrs)
+        TitlebarLink.new(link_htmls, **attrs)
+      end
+  
+      def divider(...)
+        Divider.new(...)
+      end
+  
+      def image(...)
+        Image.new(...)
+      end
+  
+      def text(...)
+        TextContent.new(...)
+      end
+  
+      def content_table(...)
+        EmailContent.new(...)
+      end
+
+      def item(...)
+        Item.new(...)
+      end
+
+      # def zstack(...)
+      #   ZStack.new(...)
+      # end
+
+      # def item(...)
+      #   if DSL::Current.parent.is_a?(ZStacl)
+      #     DSL::Current.parent.item(...)
+      #   else
+      #     Item.new(...)
+      #   end
+      # end
+
     end
 
     module Refinements
@@ -156,7 +217,6 @@ module FXAwesomeMails
         end
       end
     end
-
     
     class HStack < Element      
       self.default_email_options = { valign: 'top', style: "text-align: left", class: "hstack" }
@@ -225,9 +285,9 @@ module FXAwesomeMails
     class Preheader < Element
       HIDDEN_STYLE = 'display:none;max-height:0;overflow:hidden'.freeze
       
-      def initialize(text = nil, **attrs, &block)
+      def initialize(text = nil, **attrs)
         super(**attrs)
-        @text, @block = text, block
+        @text = text
       end
             
       def to_s
@@ -236,14 +296,13 @@ module FXAwesomeMails
         filler = tag.div(class: "preheader", style: "#{HIDDEN_STYLE};width:0;height:0") { '&#847;&zwnj;&nbsp;' * 90 }
 
         safe_join([content_div, filler])
-        # (content_div + filler).html_safe
       end
     end
 
     class TitlebarLink < Element
-      def initialize(link_html = nil, **attrs, &block)
+      def initialize(link_html = nil, **attrs)
         super(**attrs)
-        @link_html, @block = link_html, block
+        @link_html = link_html
       end
             
       def to_s
@@ -259,7 +318,7 @@ module FXAwesomeMails
 
       def to_s
         content = tag.p('<o:p>&nbsp;</o:p>'.html_safe, **email_options)
-        DSL::Current.parent.is_a?(VStack) ? tag.tr { content } : content
+        DSL::Current.parent.is_a?(VStack) ? tag.tr { tag.th { content } } : content
       end
     end
 
@@ -298,9 +357,9 @@ module FXAwesomeMails
     end
 
     class TextContent < Element
-      def initialize(text = nil, **attrs, &block)
+      def initialize(text = nil, **attrs)
         super(**attrs)
-        @text, @block = text, block
+        @text = text
       end
       
       def to_s
@@ -316,34 +375,113 @@ module FXAwesomeMails
       end
     end
 
-    class ZStack < Element
-      def to_s
-      container_style = "position: relative; width: 100%; height: 100%"
+    # class ZStack < Element
+    #   attr_reader :children
     
-        # Wrap the content (yielded via capture_body) in a table with one cell that is
-        # relatively positioned so that its children (each rendered as an absolute element)
-        tag.table(style: container_style, cellpadding: "0", cellspacing: "0", border: "0", width: "100%") do
-          tag.tbody do
-            tag.tr do
-              tag.td(style: "position: relative") do
-                capture_body
-              end
-            end
+    #   def initialize(**attrs, &block)
+    #     super
+    #     unless email_options[:width]
+    #       raise ArgumentError, "ZStack requires a :width option"
+    #     end
+    #     unless email_options[:height]
+    #       raise ArgumentError, "ZStack requires a :height option"
+    #     end
+    #     @children = []
+    #     # Set the current parent to self so that "item" calls found in the block
+    #     # will use our item method.
+    #     prev = DSL::Current.parent
+    #     DSL::Current.parent = self
+    #     instance_eval(&block) if block_given?
+    #   ensure
+    #     DSL::Current.parent = prev
+    #   end
+
+    #   def item(**options, &block)
+    #     child = ZStackItem.new(**options, &block)
+    #     @children << child
+    #     nil
+    #   end
+    
+    #   def to_s
+    #     container_width  = email_options[:width]
+    #     container_height = email_options[:height]
+    
+    #     # HTML markup for modern email clients.
+    #     html_markup = tag.table(
+    #       email_options.merge(style: "position: relative; width: #{container_width}px; height: #{container_height}px"),
+    #       cellpadding: "0",
+    #       cellspacing: "0",
+    #       border: "0",
+    #       width: container_width
+    #     ) do
+    #       tag.tbody do
+    #         safe_join(@children.map(&:html_markup))
+    #       end
+    #     end
+    
+    #     # VML markup for Outlook—wrapped in MSO conditionals.
+    #     mso_markup = <<~HTML
+    #       <!--[if mso]>
+    #       <v:group style="position:relative;width:#{container_width}px;height:#{container_height}px" coordsize="#{container_width},#{container_height}">
+    #         #{safe_join(@children.map(&:vml_markup))}
+    #       </v:group>
+    #       <![endif]-->
+    #     HTML
+    
+    #     # Wrap the HTML version in a negative conditional so Outlook ignores it.
+    #     wrapped_html_markup = <<~HTML
+    #       <!--[if !mso]><!-- -->
+    #       #{html_markup}
+    #       <!--<![endif]-->
+    #     HTML
+    
+    #     safe_join([mso_markup.html_safe, wrapped_html_markup.html_safe])
+    #   end
+    # end
+
+    # class ZStackItem < Element
+    #   # For a ZStackItem you must provide explicit positioning/dimensions.
+    #   # For example: left: 0, top: 0, width: 300, height: 200.
+    #   def html_markup
+    #     left   = email_options[:left] || 0
+    #     top    = email_options[:top] || 0
+    #     width  = email_options[:width] or raise ArgumentError, "ZStackItem requires a :width option"
+    #     height = email_options[:height] or raise ArgumentError, "ZStackItem requires a :height option"
+    
+    #     style = "position: absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;"
+    #     html_opts = email_options.merge(style: style)
+    #     tag.div(capture_body, html_opts)
+    #   end
+    
+    #   def vml_markup
+    #     left   = email_options[:left] || 0
+    #     top    = email_options[:top] || 0
+    #     width  = email_options[:width] or raise ArgumentError, "ZStackItem requires a :width option"
+    #     height = email_options[:height] or raise ArgumentError, "ZStackItem requires a :height option"
+    #     content = capture_body
+    
+    #     <<~HTML
+    #       <v:rect style="position:absolute; left: #{left}px; top: #{top}px; width: #{width}px; height: #{height}px;" fill="false" stroke="false">
+    #         <v:textbox inset="0,0,0,0">
+    #           #{content}
+    #         </v:textbox>
+    #       </v:rect>
+    #     HTML
+    #   end
+    # end
+
+    class Item < Element
+      def to_s
+        case DSL::Current.parent
+        when VStack
+          tag.tr do
+            tag.th(capture_body, **email_options)
           end
+        else
+          tag.th(capture_body, **email_options)
         end
       end
     end
-      
-    class ZStackItem < Element
-      def to_s
-        # Each ZStackItem will be layered in the same container using absolute positioning.
-        # You might further customize properties (e.g. setting a z-index) via attrs if needed.
-        absolute_style = "position: absolute; top: 0; left: 0; width: 100%"
-    
-        tag.div(capture_body, style: absolute_style)
-      end
-    end
-    
 
     class EmailContent < Element
       self.default_email_options = { width: 600, style: "background-color: #FFFFFF" }
@@ -369,6 +507,15 @@ module FXAwesomeMails
         end
 
       end
+    end
+
+    class MailBuilder
+      include TagExtensions
+    end
+
+    def fx
+      DSL::Current.view ||= (respond_to?(:capture) ? self : nil) 
+      @fx ||= MailBuilder.new 
     end
 
   end
