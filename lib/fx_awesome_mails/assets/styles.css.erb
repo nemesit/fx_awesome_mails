@@ -1,4 +1,6 @@
-body { background-color:YYY; }
+<style type="text/css">
+
+body { background-color:#FFFFFF; }
 
 .text-container {
   font-family: Arial, Helvetica, sans-serif;
@@ -69,45 +71,45 @@ th {
 }
 
 table.email-content {
-    margin-left: 1em !important;
+  <%= "margin-left: 1em !important" unless centered %>
 }
 
-@media all and (max-width: 800px) {
-  .background-table.has-width-800 .email-content {
+@media all and (max-width: <%= media_query_width %>pxpx) {
+  .background-table .email-content {
     width: 100% !important;
   }
   
-  .background-table.has-width-800 img {
+  .background-table img {
     max-width: 100%;
     height: auto;
   }
   
-  .background-table.has-width-800 .mobile-display-block {
+  .background-table .mobile-display-block {
     display: block;
     width: 100%;
   }
   
-  .background-table.has-width-800 .mobile-display-none {
+  .background-table .mobile-display-none {
     display: none;
   }
   
-  .background-table.has-width-800 .mobile-display-table-caption {
+  .background-table .mobile-display-table-caption {
     display: table-caption !important;
   }
   
-  .background-table.has-width-800 .mobile-display-table-header-group {
+  .background-table .mobile-display-table-header-group {
     display: table-header-group !important;
   }
   
-  .background-table.has-width-800 .mobile-display-table-row {
+  .background-table .mobile-display-table-row {
     display: table-row !important;
   }
   
-  .background-table.has-width-800 .mobile-display-table-footer-group {
+  .background-table .mobile-display-table-footer-group {
     display: table-footer-group !important;
   }
   
-  .background-table.has-width-800 .mobile-width-auto {
+  .background-table .mobile-width-auto {
     width: auto !important;
   }
 }
@@ -117,3 +119,4 @@ table.email-content {
     min-width: 701px !important;
   }
 }
+</style>

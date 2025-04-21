@@ -11,6 +11,11 @@ module FXAwesomeMails
 
     module TagExtensions
       
+      def base_styles(centered: true, media_query_width: 600)
+        path = File.expand_path("assets/styles.css.erb", __dir__)
+        ERB.new(File.read(path)).result_with_hash(centered:, media_query_width: media_query_width).html_safe
+      end
+
       def vstack(...)
         VStack.new(...)
       end
