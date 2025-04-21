@@ -47,8 +47,8 @@ module FXAwesomeMails
         TextContent.new(...)
       end
   
-      def content_table(...)
-        EmailContent.new(...)
+      def layout_table(...)
+        LayoutTable.new(...)
       end
 
       def item(...)
@@ -194,7 +194,6 @@ module FXAwesomeMails
 
     end
     
-
     class Spacer < Element
       def initialize(size = 16, **a)
         super(size: size, **a)
@@ -483,7 +482,7 @@ module FXAwesomeMails
       end
     end
 
-    class EmailContent < Element
+    class LayoutTable < Element
       self.default_email_options = { width: 600, style: "background-color: #FFFFFF" }
       self.default_email_options = {  valign: 'top', cellpadding: '0', cellspacing: '0', border: '0', width: 600, style: 'margin: 0; padding: 0; text-align: left; width: 100%; min-width: 600px; line-height: 100%;', role: 'presentation', background: '#FFFFFF', class: 'background-table has-width-600', bgcolor: '#FFFFFF'}
             
