@@ -1,0 +1,119 @@
+body { background-color:YYY; }
+
+.text-container {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+}
+.mso body { mso-line-height-rule: exactly; }
+
+#outlook a {
+  padding: 0;
+}
+
+body {
+  width: 100% !important;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.ExternalClass {
+  width: 100%;
+}
+
+.ExternalClass,
+.ExternalClass p,
+.ExternalClass span,
+.ExternalClass font,
+.ExternalClass th,
+.ExternalClass div {
+  line-height: 100%;
+}
+
+.background-table {
+  margin: 0;
+  padding: 0;
+  width: 100% !important;
+  min-width: 100% !important;
+  line-height: 100% !important;
+}
+
+img {
+  outline: none;
+  text-decoration: none;
+  -ms-interpolation-mode: bicubic;
+  display: block;
+}
+
+a img {
+  border: none;
+}
+a:any-link { color: #0563C1; text-decoration: none; }
+a:link { color: #0563C1; text-decoration: none; }
+a:visited { color: #0563C1; text-decoration: none; }
+a:hover { color: #0563C1; text-decoration: none; }
+a:active { color: #0563C1; text-decoration: none; }
+th.image-container {
+  background-color: transparent !important
+}
+
+table {
+  border-collapse: collapse;
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+
+th {
+  border-collapse: collapse;
+}
+
+table.email-content {
+    margin-left: 1em !important;
+}
+
+@media all and (max-width: 800px) {
+  .background-table.has-width-800 .email-content {
+    width: 100% !important;
+  }
+  
+  .background-table.has-width-800 img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .background-table.has-width-800 .mobile-display-block {
+    display: block;
+    width: 100%;
+  }
+  
+  .background-table.has-width-800 .mobile-display-none {
+    display: none;
+  }
+  
+  .background-table.has-width-800 .mobile-display-table-caption {
+    display: table-caption !important;
+  }
+  
+  .background-table.has-width-800 .mobile-display-table-header-group {
+    display: table-header-group !important;
+  }
+  
+  .background-table.has-width-800 .mobile-display-table-row {
+    display: table-row !important;
+  }
+  
+  .background-table.has-width-800 .mobile-display-table-footer-group {
+    display: table-footer-group !important;
+  }
+  
+  .background-table.has-width-800 .mobile-width-auto {
+    width: auto !important;
+  }
+}
+
+@media screen and (device-width: 768px) and (device-height: 1024px) {
+  body {
+    min-width: 701px !important;
+  }
+}

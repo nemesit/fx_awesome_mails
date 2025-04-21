@@ -27,12 +27,12 @@ module FXAwesomeMails
         Spacer.new(size, **options)
       end
   
-      def preheader(text = nil, **attrs)
-        Preheader.new(text, **attrs)
+      def preheader(...)
+        Preheader.new(...)
       end
   
-      def titlebar_link(link_html = nil, **attrs)
-        TitlebarLink.new(link_htmls, **attrs)
+      def titlebar_link(...)
+        TitlebarLink.new(...)
       end
   
       def divider(...)
@@ -47,6 +47,14 @@ module FXAwesomeMails
         TextContent.new(...)
       end
   
+      def background_table(...)
+        BackgroundTable.new(...)
+      end
+
+      def content_table(...)
+        ContentTable.new(...)
+      end
+
       def layout_table(...)
         LayoutTable.new(...)
       end
@@ -228,7 +236,7 @@ module FXAwesomeMails
         if DSL::Current.parent.is_a?(VStack)
 
           tag.tr do
-            tag.th(email_options) do
+            tag.th(**email_options) do
               tag.table(cellpadding: "0", border: "0", width: "100%", style: "min-width:100%", role: "presentation") do
                 tag.tbody do
                   tag.tr(capture_body)
@@ -239,7 +247,7 @@ module FXAwesomeMails
 
         else
 
-          tag.th(email_options) do
+          tag.th(**email_options) do
             tag.table(cellpadding: "0", cellspacing: "0", border: "0", width: "100%", style: "min-width:100%", role: "presentation") do
               tag.tbody do
                 tag.tr(capture_body)
@@ -262,7 +270,7 @@ module FXAwesomeMails
         if DSL::Current.parent.is_a?(VStack)
 
           tag.tr do
-            tag.th(email_options) do
+            tag.th(**email_options) do
               tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: '100%', style: 'min-width:100%', role: 'presentation') do
                 tag.tbody(capture_body)
               end
@@ -271,7 +279,7 @@ module FXAwesomeMails
 
         else
 
-          tag.th(email_options) do
+          tag.th(**email_options) do
             tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: '100%', style: 'min-width:100%', role: 'presentation') do
               tag.tbody(capture_body)
             end
@@ -322,7 +330,7 @@ module FXAwesomeMails
     end
 
     class Image < Element
-      self.default_email_options = { alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: '', style: "background-color: transparent;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }
+      self.default_email_options = { alt: '', link_url: nil, width: 130, height: 50, valign: 'top', align: 'left', class: 'image-container', style: "background-color: transparent;outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; display: block; border: none" }
       def link_to_if_true(condition, name, options = {}, html_options = {}, &block)
         if condition
           link_to(name, options, html_options, &block)
@@ -356,6 +364,8 @@ module FXAwesomeMails
     end
 
     class TextContent < Element
+      self.default_email_options = { class: "text-container" }
+
       def initialize(text = nil, **attrs)
         super(**attrs)
         @text = text
@@ -482,29 +492,57 @@ module FXAwesomeMails
       end
     end
 
-    class LayoutTable < Element
-      self.default_email_options = { width: 600, style: "background-color: #FFFFFF" }
+    class BackgroundTable < Element
       self.default_email_options = {  valign: 'top', cellpadding: '0', cellspacing: '0', border: '0', width: 600, style: 'margin: 0; padding: 0; text-align: left; width: 100%; min-width: 600px; line-height: 100%;', role: 'presentation', background: '#FFFFFF', class: 'background-table has-width-600', bgcolor: '#FFFFFF'}
-            
+
+      def initialize(**attrs)
+        super(**attrs)
+      end
+
       def to_s
-        tag.table(email_options) do
+        tag.table(**email_options) do
+          tag.tbody do
+            tag.tr do
+              tag.th(capture_body)
+            end
+          end
+        end
+      end
+    end
+
+    class ContentTable < Element
+      self.default_email_options = { cellpadding: '0', cellspacing: '0', border: '0', width: 600, style: "width:600px; margin:0 auto", role: 'presentation', class: "email-content", align: 'center' }
+
+      def initialize(**attrs)
+        super(**attrs)
+      end
+
+      def to_s
+        tag.table(**email_options) do
           tag.tbody do
             tag.tr do
               tag.th(valign: "top") do
-                tag.table(cellpadding: '0', cellspacing: '0', border: '0', width: email_options[:width], style: "width:#{email_options[:width]}px; margin:0 auto", role: 'presentation', class: "#{email_options[:class]} email-content", align: 'center') do
-                  tag.tbody do
-                    tag.tr do
-                      tag.th(valign: "top") do
-                        tag.div(capture_body)
-                      end
-                    end
-                  end
-                end
+                tag.div(capture_body)
               end
             end
           end
         end
+      end
+    end
 
+
+    class LayoutTable < Element
+      
+      def initialize(**attrs)
+        super(**attrs)
+      end
+
+      def to_s
+        BackgroundTable.new do
+          ContentTable.new(**email_options) do
+            capture_body
+          end.to_s
+        end.to_s
       end
     end
 
